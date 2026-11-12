@@ -1,0 +1,11 @@
+{
+  "name": "social-posts-generator",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
