@@ -1,4 +1,4 @@
-# DESIGN: Bosma — визуальный язык Social Posts Generator
+# DESIGN: Bosma — визуальный язык
 
 **Статус:** реализовано (v0.1) · **Дата:** 12.11.2026 · **Основа:** [PRD.md](PRD.md), [SPEC.md](SPEC.md)
 

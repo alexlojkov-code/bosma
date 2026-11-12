@@ -37,6 +37,6 @@ npm run spike
 
 ## Публикация
 
-- GitHub: https://github.com/alexlojkov-code/social-posts-generator
-- Сайт: https://social-posts-generator-six.vercel.app (Vercel-проект `social-posts-generator`, push в `main` публикует сам)
+- GitHub: https://github.com/alexlojkov-code/bosma
+- Сайт: https://bosma-posts.vercel.app (Vercel-проект `bosma`, push в `main` публикует сам). Старый адрес social-posts-generator-six.vercel.app тоже работает.
 - Чтобы включить ИИ: добавить `GEMINI_API_KEY` в Vercel (Production и Preview) и передеплоить.

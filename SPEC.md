@@ -1,4 +1,4 @@
-# SPEC: Social Posts Generator (MVP v0.1)
+# SPEC: Bosma (MVP v0.1)
 
 **Статус:** реализовано (v0.1, mock-режим) · интерфейс уточнён в [DESIGN.md](DESIGN.md) §13 · **Дата:** 12.11.2026 · **Основа:** [PRD.md](PRD.md)
 
@@ -54,7 +54,7 @@ FR-23 (версии варианта), FR-34 (Share), FR-47 (экспорт), PW
 ### 2.1. Структура проекта
 
 ```
-social-posts-generator/
+bosma/
 ├── api/
 │   ├── generate.js          # POST /api/generate — SSE-стрим одного варианта
 │   ├── health.js            # GET /api/health — {ok, mode, model}
