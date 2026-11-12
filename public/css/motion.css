@@ -1,0 +1,76 @@
+/* Bosma — движение (DESIGN §9). Анимируем transform / opacity / clip-path. */
+
+/* Курсор набора — прямоугольная литера, мигает ступенчато (D3). */
+.caret {
+  display: inline-block;
+  width: 0.45em;
+  height: 0.95em;
+  margin-left: 1px;
+  vertical-align: -0.1em;
+  background: var(--black);
+  animation: caret-blink 900ms steps(2, jump-none) infinite;
+}
+.post-title .caret { width: 0.32em; }
+@keyframes caret-blink { 50% { opacity: 0; } }
+
+/* Приводка: пока поле набирается, второй слой краски сдвинут (D3). */
+.is-misreg .post-title { text-shadow: 0.06em 0.04em 0 var(--ink); }
+.is-misreg .post-body,
+.is-misreg .post-cta,
+.is-misreg .post-tags { text-shadow: 1.5px 1px 0 color-mix(in srgb, var(--ink) 75%, transparent); }
+.sheet--benefit .field--cta.is-misreg .post-cta { text-shadow: 1.5px 1px 0 color-mix(in srgb, var(--black) 35%, transparent); }
+
+/* Валик: растровая полоса проходит по пустому листу (D4). */
+.sheet[data-waiting] .sheet-paper { min-height: 240px; overflow: hidden; }
+.sheet[data-waiting] .sheet-paper::after {
+  content: '';
+  position: absolute; top: 0; bottom: 0; left: 0;
+  width: 46%;
+  background-image: radial-gradient(color-mix(in srgb, var(--ink) 55%, transparent) 1.3px, transparent 1.7px);
+  background-size: 5px 5px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent);
+  animation: roller 1.2s var(--ease-out) infinite;
+}
+@keyframes roller {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(240%); }
+}
+
+/* Маркер под предупреждением (D11). */
+.warn--soft.is-new { animation: marker-swipe 300ms var(--ease-out) both; }
+@keyframes marker-swipe { from { background-size: 0% 0.35em; } }
+.warn--hard.is-new { animation: marker-fill 300ms var(--ease-out) both; }
+@keyframes marker-fill { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+
+/* ---------- View Transitions: смена краски (D2), бланк ↔ архив (D9) ---------- */
+::view-transition-old(root),
+::view-transition-new(root) { animation-duration: var(--dur-ui); }
+
+html.vt-ink::view-transition-old(root),
+html.vt-ink::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+html.vt-ink::view-transition-new(root) { z-index: 2; }
+
+html.vt-forward::view-transition-old(root) { animation: page-out-left 400ms var(--ease-out) both; }
+html.vt-forward::view-transition-new(root) { animation: page-in-right 400ms var(--ease-out) both; }
+html.vt-back::view-transition-old(root) { animation: page-out-right 400ms var(--ease-out) both; }
+html.vt-back::view-transition-new(root) { animation: page-in-left 400ms var(--ease-out) both; }
+@keyframes page-out-left { to { transform: translateX(-28%); opacity: 0; } }
+@keyframes page-in-right { from { transform: translateX(100%); box-shadow: -14px 0 0 var(--line); } }
+@keyframes page-out-right { to { transform: translateX(100%); } }
+@keyframes page-in-left { from { transform: translateX(-28%); opacity: 0; } }
+html.vt-back::view-transition-old(root) { z-index: 2; box-shadow: -14px 0 0 var(--line); }
+
+/* ---------- Без движения ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+  .caret { animation: none; }
+  .sheet[data-waiting] .sheet-paper::after { animation: none; transform: none; width: 100%; opacity: .5; }
+  .is-misreg .post-title, .is-misreg .post-body, .is-misreg .post-cta, .is-misreg .post-tags { text-shadow: none; }
+  ::view-transition-old(root), ::view-transition-new(root) { animation: none !important; }
+}

@@ -1,5 +1,9 @@
-// Проверка, что серверные функции живы: GET /api/health → {"ok":true}
+// GET /api/health → {ok, mode, model}. Ключ не раскрывается.
+import { getConfig } from './_lib/config.js';
+
 export default function handler(req, res) {
+  const cfg = getConfig();
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.end(JSON.stringify({ ok: true, service: 'social-posts-generator' }));
+  res.setHeader('Cache-Control', 'no-store');
+  res.end(JSON.stringify({ ok: true, mode: cfg.mode, model: cfg.model }));
 }

@@ -1,31 +1,225 @@
 <!doctype html>
-<html lang="ru">
+<html lang="ru" data-platform="telegram">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Social Posts Generator</title>
-  <style>
-    :root { --bg: #f7f6f3; --fg: #1b1b1b; --muted: #6b6b6b; --accent: #3b5bdb; }
-    @media (prefers-color-scheme: dark) { :root { --bg: #141414; --fg: #ececec; --muted: #9a9a9a; --accent: #8ea2ff; } }
-    * { box-sizing: border-box; }
-    body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 16px;
-           background: var(--bg); color: var(--fg); font: 16px/1.5 -apple-system, system-ui, sans-serif; }
-    main { max-width: 520px; }
-    h1 { font-size: 28px; margin: 0 0 8px; }
-    p { margin: 0 0 6px; color: var(--muted); }
-    code { color: var(--accent); }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Bosma — посты для соцсетей</title>
+  <meta name="description" content="Опишите бизнес и идею — Bosma напишет три варианта поста для Telegram, Instagram или YouTube: заголовок, текст, призыв и хэштеги.">
+  <meta name="theme-color" content="#F4F5F1" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0C1B28" media="(prefers-color-scheme: dark)">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" type="image/svg+xml" href="/favicon-telegram.svg" id="favicon">
+  <link rel="preload" href="/fonts/sofia-sans-extra-condensed-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/fonts/golos-text-cyrillic.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/css/tokens.css">
+  <link rel="stylesheet" href="/css/app.css">
+  <link rel="stylesheet" href="/css/motion.css">
+  <script type="module" src="/js/app.js"></script>
 </head>
 <body>
-  <main>
-    <h1>Social Posts Generator</h1>
-    <p>Проект создан. Здесь появится генератор постов для соцсетей.</p>
-    <p>Статус API: <code id="health">проверяю…</code></p>
+  <a class="skip" href="#main">К содержимому</a>
+
+  <header class="masthead">
+    <a class="logo" href="#/" aria-label="Bosma — на главную">
+      <span class="logo-word" aria-hidden="true">Bosma</span>
+      <span class="logo-sub">посты для соцсетей</span>
+    </a>
+    <a class="archive-link" href="#/archive" id="archive-link">
+      <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h18v4H3zM5 8v12h14V8M9 12h6"/></svg>
+      <span>Архив</span>
+      <span class="archive-count" id="archive-count">0</span>
+    </a>
+  </header>
+
+  <div class="banner" id="banner" role="status" hidden></div>
+
+  <main id="main">
+    <!-- ЭКРАН «БЛАНК» -->
+    <section class="screen screen--create" id="screen-create" aria-labelledby="create-title">
+      <h1 class="sr-only" id="create-title">Новый пост</h1>
+      <button class="summary" id="summary" type="button" hidden aria-expanded="false" aria-controls="brief">
+        <span class="summary-text" id="summary-text"></span>
+        <span class="summary-edit">Изменить</span>
+      </button>
+
+      <form class="brief" id="brief" novalidate autocomplete="off">
+        <div class="step">
+          <label class="step-label" for="business"><span class="step-n" aria-hidden="true">1</span>Кто вы</label>
+          <p class="step-hint" id="business-hint">Чем занимаетесь, где, для кого. Цены и адреса — если хотите, чтобы они были в посте.</p>
+          <textarea class="line-field" id="business" name="business" rows="3" maxlength="1600"
+            placeholder="Например: кофейня у метро Ойбек, своя обжарка, завтраки до полудня"
+            aria-describedby="business-hint business-err"></textarea>
+          <div class="field-foot">
+            <p class="field-err" id="business-err" aria-live="polite"></p>
+            <span class="counter" id="business-count">0 / 1500</span>
+          </div>
+        </div>
+
+        <div class="step">
+          <label class="step-label" for="idea"><span class="step-n" aria-hidden="true">2</span>О чём пост</label>
+          <div class="field-wrap">
+            <textarea class="line-field" id="idea" name="idea" rows="2" maxlength="1100"
+              placeholder="Например: осеннее меню — тыквенный латте и сырники"
+              aria-describedby="idea-err"></textarea>
+            <button class="field-clear" id="idea-clear" type="button" aria-label="Очистить идею" hidden>
+              <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+            </button>
+          </div>
+          <div class="field-foot">
+            <p class="field-err" id="idea-err" aria-live="polite"></p>
+            <span class="counter" id="idea-count">0 / 1000</span>
+          </div>
+          <div class="chips" aria-label="Подсказки для идеи">
+            <button type="button" class="chip" data-template="Акция: …">Акция</button>
+            <button type="button" class="chip" data-template="Новинка: …">Новинка</button>
+            <button type="button" class="chip" data-template="Отзыв клиента: …">Отзыв клиента</button>
+            <button type="button" class="chip" data-template="Полезный совет: …">Полезный совет</button>
+            <button type="button" class="chip" data-template="Анонс события: …">Анонс события</button>
+          </div>
+        </div>
+
+        <fieldset class="step">
+          <legend class="step-label"><span class="step-n" aria-hidden="true">3</span>Где опубликуем</legend>
+          <div class="cans" id="cans">
+            <label class="can can--telegram"><input type="radio" name="platform" value="telegram" checked><span>Telegram</span></label>
+            <label class="can can--instagram"><input type="radio" name="platform" value="instagram"><span>Instagram</span></label>
+            <label class="can can--youtube"><input type="radio" name="platform" value="youtube"><span>YouTube</span></label>
+          </div>
+          <div class="selects">
+            <label class="select-row"><span>Язык</span>
+              <select id="language" name="language">
+                <option value="ru">Русский</option>
+                <option value="uz">O‘zbek (бета)</option>
+                <option value="en">English</option>
+              </select>
+            </label>
+            <label class="select-row"><span>Тон</span>
+              <select id="tone" name="tone">
+                <option value="auto">Подберите сами</option>
+                <option value="friendly">Дружелюбный</option>
+                <option value="expert">Экспертный</option>
+                <option value="selling">Продающий</option>
+                <option value="neutral">Нейтральный</option>
+              </select>
+            </label>
+          </div>
+        </fieldset>
+      </form>
+
+      <section class="results" id="results" hidden aria-label="Варианты поста">
+        <div class="tabs" id="tabs" role="tablist" aria-label="Подходы"></div>
+        <div class="stack" id="stack"></div>
+        <p class="facts-note">Проверьте цены и даты перед публикацией.</p>
+      </section>
+
+      <footer class="foot">
+        <a href="/privacy.html">Политика конфиденциальности</a>
+      </footer>
+    </section>
+
+    <!-- ЭКРАН «АРХИВ» -->
+    <section class="screen screen--archive" id="screen-archive" aria-labelledby="archive-title" hidden>
+      <div class="archive-head">
+        <a class="back" href="#/">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+          Бланк
+        </a>
+        <h1 class="archive-title" id="archive-title">Архив</h1>
+      </div>
+      <label class="search">
+        <span class="sr-only">Поиск по архиву</span>
+        <input type="search" id="archive-search" placeholder="Поиск по архиву" enterkeyhint="search">
+      </label>
+      <div class="filters" id="archive-filters" role="group" aria-label="Фильтр">
+        <button type="button" class="filter" data-filter="all" aria-pressed="true">Все</button>
+        <button type="button" class="filter" data-filter="telegram" aria-pressed="false">Telegram</button>
+        <button type="button" class="filter" data-filter="instagram" aria-pressed="false">Instagram</button>
+        <button type="button" class="filter" data-filter="youtube" aria-pressed="false">YouTube</button>
+        <button type="button" class="filter" data-filter="starred" aria-pressed="false">Отмеченные</button>
+      </div>
+      <ol class="archive-list" id="archive-list"></ol>
+      <div class="archive-empty" id="archive-empty" hidden>
+        <p class="empty-word" aria-hidden="true">Архив пуст</p>
+        <p class="empty-text" id="archive-empty-text">Здесь будут все написанные посты.</p>
+        <a class="btn btn--primary" href="#/">Написать первый пост</a>
+      </div>
+      <button type="button" class="btn-text danger" id="archive-clear" hidden>Очистить архив</button>
+    </section>
   </main>
-  <script>
-    fetch('/api/health').then(r => r.json()).then(d => {
-      document.getElementById('health').textContent = d.ok ? 'работает' : 'ошибка';
-    }).catch(() => { document.getElementById('health').textContent = 'недоступен'; });
-  </script>
+
+  <div class="dock" id="dock">
+    <button type="button" class="btn btn--primary btn--wide" id="primary">Написать 3 варианта</button>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden>
+    <span class="toast-text" id="toast-text"></span>
+    <button type="button" class="toast-action" id="toast-action" hidden></button>
+  </div>
+
+  <dialog class="copy-dialog" id="copy-dialog" aria-labelledby="copy-dialog-title">
+    <h2 id="copy-dialog-title">Скопируйте вручную</h2>
+    <p>Нажмите и удерживайте текст, затем выберите «Скопировать».</p>
+    <textarea id="copy-dialog-text" readonly rows="10"></textarea>
+    <form method="dialog"><button class="btn btn--primary">Готово</button></form>
+  </dialog>
+
+  <div class="sr-only" id="live" aria-live="polite"></div>
+
+  <template id="sheet-template">
+    <article class="sheet" aria-busy="false">
+      <header class="sheet-head">
+        <span class="sheet-angle"></span>
+        <span class="sheet-status"></span>
+      </header>
+      <div class="sheet-paper">
+        <div class="field field--title" data-field="title">
+          <h3 class="post-title"><span class="ink"></span></h3>
+          <button type="button" class="icon-btn copy-field" data-copy="title" aria-label="Копировать заголовок">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h12v12H8z M4 16V4h12"/></svg>
+          </button>
+        </div>
+        <div class="field field--body" data-field="body">
+          <p class="post-body"><span class="ink"></span></p>
+          <button type="button" class="icon-btn copy-field" data-copy="body" aria-label="Копировать текст">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h12v12H8z M4 16V4h12"/></svg>
+          </button>
+        </div>
+        <div class="field field--cta" data-field="cta">
+          <p class="post-cta"><span class="ink"></span></p>
+          <button type="button" class="icon-btn copy-field" data-copy="cta" aria-label="Копировать призыв">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h12v12H8z M4 16V4h12"/></svg>
+          </button>
+        </div>
+        <div class="field field--hashtags" data-field="hashtags">
+          <p class="post-tags"><span class="ink"></span></p>
+          <button type="button" class="icon-btn copy-field" data-copy="hashtags" aria-label="Копировать хэштеги">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 8h12v12H8z M4 16V4h12"/></svg>
+          </button>
+        </div>
+        <div class="sheet-error" hidden>
+          <p class="stamp stamp--reject" aria-hidden="true">Брак</p>
+          <p class="sheet-error-text"></p>
+          <button type="button" class="btn btn--primary btn--small retry">Повторить</button>
+        </div>
+        <p class="stamp stamp--copied" aria-hidden="true">Скопировано</p>
+        <svg class="proofmark" aria-hidden="true" preserveAspectRatio="none"><path/></svg>
+      </div>
+      <div class="sheet-meta">
+        <span class="counter sheet-count"></span>
+        <ul class="warnings"></ul>
+      </div>
+      <div class="tweaks" aria-label="Быстрые правки">
+        <button type="button" class="chip" data-tweak="shorter">Короче</button>
+        <button type="button" class="chip" data-tweak="longer">Длиннее</button>
+        <button type="button" class="chip" data-tweak="more_emoji">Больше эмодзи</button>
+        <button type="button" class="chip" data-tweak="no_emoji">Без эмодзи</button>
+        <button type="button" class="chip" data-tweak="new_cta">Другой призыв</button>
+      </div>
+      <div class="sheet-actions">
+        <button type="button" class="btn-text regen">Переписать</button>
+        <button type="button" class="btn btn--primary copy">Копировать</button>
+      </div>
+    </article>
+  </template>
 </body>
 </html>

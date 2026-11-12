@@ -3,7 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "node server.mjs"
+    "dev": "node server.mjs",
+    "test": "node --test \"tests/**/*.test.js\"",
+    "spike": "node scripts/spike.mjs"
   },
   "engines": {
     "node": ">=20"

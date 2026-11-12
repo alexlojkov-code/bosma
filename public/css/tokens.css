@@ -1,0 +1,147 @@
+/* Bosma — токены (DESIGN §4, §5, §9.1). Обе темы равноценны; краска — по data-platform. */
+
+/* ---------- Шрифты ---------- */
+@font-face {
+  font-family: 'Bosma Display';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 1 1000;
+  src: url(/fonts/sofia-sans-extra-condensed-cyrillic.woff2) format('woff2-variations');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Bosma Display';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 1 1000;
+  src: url(/fonts/sofia-sans-extra-condensed-latin-ext.woff2) format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Bosma Display';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 1 1000;
+  src: url(/fonts/sofia-sans-extra-condensed-latin.woff2) format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Bosma Text';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 900;
+  src: url(/fonts/golos-text-cyrillic.woff2) format('woff2-variations');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Bosma Text';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 900;
+  src: url(/fonts/golos-text-latin-ext.woff2) format('woff2-variations');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Bosma Text';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 900;
+  src: url(/fonts/golos-text-latin.woff2) format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* Запасной узкий шрифт с подгонкой ширины, чтобы раскладка не прыгала до загрузки. */
+@font-face {
+  font-family: 'Bosma Display Fallback';
+  src: local('Arial Narrow'), local('ArialNarrow'), local('Roboto Condensed');
+  size-adjust: 88%;
+}
+
+/* ---------- Светлая тема (база) ---------- */
+:root {
+  --font-display: 'Bosma Display', 'Bosma Display Fallback', 'Arial Narrow', sans-serif;
+  --font-text: 'Bosma Text', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --t-hero: 4rem;     /* 64 */
+  --t-h1: 2.5rem;     /* 40 */
+  --t-h2: 1.75rem;    /* 28 */
+  --t-button: 1.375rem; /* 22 */
+  --t-body: 1.0625rem;  /* 17 */
+  --t-ui: 1rem;         /* 16 */
+  --t-small: 0.875rem;  /* 14 */
+
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px; --s-7: 48px;
+  --gutter: 16px;
+
+  --r-sheet: 2px; --r-button: 4px; --r-chip: 3px;
+
+  --dur-tap: 120ms;
+  --dur-ui: 240ms;
+  --dur-scene: 480ms;
+  --dur-stamp: 650ms;
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+  --ease-press: cubic-bezier(.5, 0, .75, 0);
+
+  --paper: #F4F5F1;
+  --sheet: #FFFFFF;
+  --black: #000000;
+  --black-soft: #55564F;
+  --line: #C8CAC1;
+  --marker: #FFE800;
+  --on-marker: #000000;
+  --danger: #B3192B;
+
+  /* Зерно бумаги: статичный шум, тёмные точки. */
+  --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .55 -.18'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  --grain-opacity: .38;
+
+  color-scheme: light;
+}
+
+@supports (transition-timing-function: linear(0, 1)) {
+  :root { --ease-spring: linear(0, .7 18%, 1.08 36%, .98 55%, 1.01 75%, 1); }
+}
+
+/* ---------- Краски всех площадок (банки с краской, полосы архива) ---------- */
+:root {
+  --c-telegram: #0078BF; --ct-telegram: #005A90; --con-telegram: #FFFFFF;
+  --c-instagram: #FF48B0; --ct-instagram: #B8006E; --con-instagram: #000000;
+  --c-youtube: #F15060; --ct-youtube: #B3192B; --con-youtube: #000000;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --c-telegram: #4DB2F0; --ct-telegram: #4DB2F0; --con-telegram: #000000;
+    --c-instagram: #FF6EC0; --ct-instagram: #FF6EC0; --con-instagram: #000000;
+    --c-youtube: #FF7A70; --ct-youtube: #FF7A70; --con-youtube: #000000;
+  }
+}
+
+/* ---------- Краска текущей площадки (светлая) ---------- */
+:root[data-platform="telegram"] { --ink: #0078BF; --ink-text: #005A90; --on-ink: #FFFFFF; }
+:root[data-platform="instagram"] { --ink: #FF48B0; --ink-text: #B8006E; --on-ink: #000000; }
+:root[data-platform="youtube"] { --ink: #F15060; --ink-text: #B3192B; --on-ink: #000000; }
+
+/* ---------- Тёмная тема: ночная печать, бумага тонирована краской ---------- */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --black: #F4F5F1;
+    --marker: #F2D600;
+    --on-marker: #000000;
+    --danger: #FF8A80;
+    --grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .4 -.16'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    --grain-opacity: .35;
+    color-scheme: dark;
+  }
+  :root[data-platform="telegram"] {
+    --paper: #0C1B28; --sheet: #13283A; --black-soft: #A9B6C1; --line: #2A4257;
+    --ink: #4DB2F0; --ink-text: #4DB2F0; --on-ink: #000000;
+  }
+  :root[data-platform="instagram"] {
+    --paper: #26101C; --sheet: #341827; --black-soft: #C4AEB9; --line: #4E2D3E;
+    --ink: #FF6EC0; --ink-text: #FF6EC0; --on-ink: #000000;
+  }
+  :root[data-platform="youtube"] {
+    --paper: #26100F; --sheet: #351816; --black-soft: #C4AFAD; --line: #4F2D2A;
+    --ink: #FF7A70; --ink-text: #FF7A70; --on-ink: #000000;
+  }
+}

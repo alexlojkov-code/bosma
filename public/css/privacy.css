@@ -1,0 +1,6 @@
+.doc { max-width: 640px; margin: 0 auto; padding: 8px var(--gutter) 48px; }
+.doc h1 { font: 900 var(--t-h1)/1 var(--font-display); margin: 12px 0 6px; text-shadow: 0.05em 0.04em 0 var(--ink); }
+.doc h2 { font: 800 var(--t-h2)/1.05 var(--font-display); margin: 28px 0 8px; }
+.doc p { font-size: var(--t-body); line-height: 1.55; max-width: 34em; margin: 0 0 12px; }
+.doc .doc-date { color: var(--black-soft); font-size: var(--t-small); }
+.doc a { text-decoration-color: var(--ink); text-decoration-thickness: 2px; text-underline-offset: 3px; }
