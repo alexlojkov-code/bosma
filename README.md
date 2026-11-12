@@ -19,4 +19,4 @@ node server.mjs
 ## Где живёт проект
 
 - GitHub: https://github.com/alexlojkov-code/social-posts-generator
-- Vercel: проект `social-posts-generator`, push в `main` публикует сайт сам
+- Сайт: https://social-posts-generator-six.vercel.app (Vercel-проект `social-posts-generator`, push в `main` публикует сам)
